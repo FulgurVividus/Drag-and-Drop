@@ -62,6 +62,18 @@ class ProjectState extends State<Project> {
       enumProjectStatus.ACTIVE
     );
     this.projects.push(newProject);
+    this.updateListeners();
+  }
+
+  moveProject(projectId: string, newStatus: enumProjectStatus) {
+    const project = this.projects.find((prj) => prj.id === projectId);
+    if (project && project.status !== newStatus) {
+      project.status = newStatus;
+      this.updateListeners();
+    }
+  }
+
+  private updateListeners() {
     for (const listenerFn of this.listeners) {
       listenerFn(this.projects.slice());
     }
@@ -203,7 +215,7 @@ class ProjectItem
   }
 
   dragEndHandler(e: DragEvent) {
-    console.log(`DragEnd`);
+    // console.log(`DragEnd`);
   }
 
   configure() {
@@ -242,8 +254,15 @@ class ProjectList
     }
   }
 
+  @AutoBind
   dropHandler(e: DragEvent) {
-    console.log(e);
+    const prjId = e.dataTransfer!.getData("text/plain");
+    projectState.moveProject(
+      prjId,
+      this.type === "active"
+        ? enumProjectStatus.ACTIVE
+        : enumProjectStatus.FINISHED
+    );
   }
 
   @AutoBind
