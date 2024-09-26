@@ -1,4 +1,4 @@
-import { Project, enumProjectStatus } from "../models/project.js";
+import { Project, enumProjectStatus } from "../models/project";
 
 //# Project State Management Class
 type Listener<T> = (items: T[]) => void;
